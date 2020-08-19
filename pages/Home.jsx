@@ -1,8 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useRef, useState } from 'react';
-import { StyleSheet, Text, View, ImageBackground, Animated, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, Animated, TextInput, TouchableOpacity } from 'react-native';
 import backgroundImage from '../pictures/garrett-sears-mainPage.jpg';
 import { useFonts, Caveat_700Bold } from '@expo-google-fonts/caveat';
+import _ from 'lodash'
 
 const WidthMaker = (props) => {
     // variables for the animations, don't use state since it is less efficient
@@ -57,7 +58,7 @@ const SearchOpacity = (props) => {
         delay: 3000,
         toValue: 1,
         duration: 1000,
-        useNativeDriver: false
+        useNativeDriver: true
       }
     ).start()
   }, [viewOpacity])
@@ -77,6 +78,32 @@ const SearchOpacity = (props) => {
 
 const Home = () => {
   const [ inputText, setInputText ] = useState('')
+
+  // function for get request
+  async function getData(url = '') {
+    const response = await fetch(url, {
+        method: 'GET', 
+        mode: 'cors',
+        cache: 'no-cache',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    });
+    return response ? response.json() : console.log('no reponse')
+  };
+
+  // function for searching
+  const handlePress = () => {
+    try {
+      // in dev have to use manual localhost
+      getData('http://192.168.0.27:8080/').then( response => {
+        console.log(response)
+      })
+    } catch(error) {
+      console.log(error)
+    }
+  }
 
   let [fontsLoaded] = useFonts({
     Caveat_700Bold
@@ -122,7 +149,8 @@ const Home = () => {
               onChangeText={inputText => setInputText(inputText)}
               defaultValue={inputText}
             />
-            <View
+            <TouchableOpacity
+            onPress={handlePress}
               style={styles.buttonStyle}
             >
               <Text 
@@ -130,7 +158,7 @@ const Home = () => {
               >
                 Search
               </Text>
-            </View>
+            </TouchableOpacity>
           </SearchOpacity>
           <StatusBar style="auto" />
         </ImageBackground>
@@ -196,12 +224,13 @@ const Home = () => {
       shadowColor: "black",
       shadowOffset: {
         width: -1,
-        height: 2
+        height: 3
       },
       shadowOpacity: 1
     },
     searchText: {
-      color: "white"
+      color: "white",
+      fontSize: 18,
     }
   });
 
