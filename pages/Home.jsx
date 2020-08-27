@@ -80,24 +80,28 @@ const Home = () => {
   const [ inputText, setInputText ] = useState('')
 
   // function for get request
-  async function getData(url = '') {
+  async function postData(url = '', data={}) {
+    let myBody = JSON.stringify(data)
     const response = await fetch(url, {
-        method: 'GET', 
+        method: 'POST', 
         mode: 'cors',
         cache: 'no-cache',
         credentials: 'same-origin',
         headers: {
             'Content-Type': 'application/json'
         },
+        body: myBody
     });
     return response ? response.json() : console.log('no reponse')
-  };
+  }; 
 
   // function for searching
   const handlePress = () => {
     try {
       // in dev have to use manual localhost
-      getData('http://192.168.0.27:8080/').then( response => {
+      postData('http://192.168.0.27:8080/trails', {
+        City: 'Seattle'
+      }).then( response => {
         console.log(response)
       })
     } catch(error) {
