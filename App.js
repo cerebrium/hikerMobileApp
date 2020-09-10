@@ -6,8 +6,8 @@ import SearchPage from './pages/SearchPage'
 const App = () => {
   return (
     <NativeRouter>
-      <Route exact path="/" component={Home} />
-      <Route exact path="/search" component={SearchPage} />
+      <Route exact path="/" component={SearchPage} />
+      <Route exact path="/search"  component={Home}/>
     </NativeRouter>
   );
 }
