@@ -1,8 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useRef, useState } from 'react';
-import { StyleSheet, Text, View, ImageBackground, Animated, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, Animated, TextInput, TouchableOpacity, SafeAreaView } from 'react-native';
 import backgroundImage from '../pictures/garrett-sears-mainPage.jpg';
 import { useFonts, Caveat_700Bold } from '@expo-google-fonts/caveat';
+import { Link } from "react-router-native";
 import _ from 'lodash'
 
 const WidthMaker = (props) => {
@@ -79,36 +80,6 @@ const SearchOpacity = (props) => {
 const Home = () => {
   const [ inputText, setInputText ] = useState('')
 
-  // function for get request
-  async function postData(url = '', data={}) {
-    let myBody = JSON.stringify(data)
-    const response = await fetch(url, {
-        method: 'POST', 
-        mode: 'cors',
-        cache: 'no-cache',
-        credentials: 'same-origin',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: myBody
-    });
-    return response ? response.json() : console.log('no reponse')
-  }; 
-
-  // function for searching
-  const handlePress = () => {
-    try {
-      // in dev have to use manual localhost
-      postData('http://192.168.0.27:8080/trails', {
-        City: 'Seattle'
-      }).then( response => {
-        console.log(response)
-      })
-    } catch(error) {
-      console.log(error)
-    }
-  }
-
   let [fontsLoaded] = useFonts({
     Caveat_700Bold
   })
@@ -116,14 +87,14 @@ const Home = () => {
   // load the font before rendering
   if (!fontsLoaded) {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <ImageBackground source={backgroundImage} style={styles.image}>
         </ImageBackground>
-      </View>
+      </SafeAreaView>
     )
   } else {
     return (
-      <View 
+      <SafeAreaView
         style={styles.container}
       >
         <ImageBackground 
@@ -153,20 +124,22 @@ const Home = () => {
               onChangeText={inputText => setInputText(inputText)}
               defaultValue={inputText}
             />
-            <TouchableOpacity
-            onPress={handlePress}
-              style={styles.buttonStyle}
-            >
-              <Text 
-                style={styles.searchText}
+              <TouchableOpacity
+              // onPress={handlePress}
+                style={styles.buttonStyle}
               >
-                Search
-              </Text>
-            </TouchableOpacity>
+                <Link to={`/search/:${inputText}`}>
+                  <Text 
+                    style={styles.searchText}
+                  >
+                    Search
+                  </Text>
+                </Link>
+              </TouchableOpacity>
           </SearchOpacity>
           <StatusBar style="auto" />
         </ImageBackground>
-      </View>
+      </SafeAreaView>
     );
   }
 }
@@ -195,7 +168,7 @@ const Home = () => {
       fontSize: 34,
       color: "#DBDFEB",
       padding: 10,
-      fontFamily: 'Caveat_700Bold'
+      // fontFamily: 'Caveat_700Bold'
     }, 
     inputBar: {
       backgroundColor: "black",
