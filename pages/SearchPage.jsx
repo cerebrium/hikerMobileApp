@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { StyleSheet, Text, View, ImageBackground, ScrollView, SafeAreaView, Animated, Image, TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, ScrollView, SafeAreaView, Image, TouchableOpacity} from 'react-native';
 import backgroundImage from '../pictures/forest.jpg'
 import { Link } from "react-router-native";
 import { WebView } from 'react-native-webview'
@@ -15,51 +15,9 @@ const SearchPage = (props) => {
     const [ loadingScreen, setLoadingScreen ] = useState(null)
     const [ webViewGate, setWebViewGate ] = useState('false')
     const [ content, setContent ] = useState(null)
+    const [ lastTrail, setLastTrail ] = useState('')
 
     // get the parameter
-    useEffect( () => {
-        setLoadingScreen(
-            <>
-                <Image source={loadingTree} style={styles.loadingGif}></Image>
-                <Text style={styles.loadingText}>Loading...</Text>
-            </>
-        )
-         // function for get request
-        async function postData(url = '', data={}) {
-            let myBody = JSON.stringify(data)
-            const response = await fetch(url, {
-                method: 'POST', 
-                mode: 'cors',
-                cache: 'no-cache',
-                credentials: 'same-origin',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: myBody
-            });
-            return response ? response.json() : console.log('no reponse')
-        }; 
-        if (props.match.params.value !== ':') {
-            // function for searching
-            const handlePress = () => {
-                try {
-                // in dev have to use manual localhost
-                postData('http://192.168.0.27:8080/trails', {
-                    City: props.match.params.value.slice(1)
-                }).then( response => {
-                    console.log(response.trails)
-                    setData(response.trails)
-                        setLoadingScreen(null)
-                })
-                } catch(error) {
-                    console.log(error)
-                }
-            }
-            handlePress()
-        }
-    }, [])
-
-    // map some sample data
     // useEffect( () => {
     //     setLoadingScreen(
     //         <>
@@ -67,238 +25,281 @@ const SearchPage = (props) => {
     //             <Text style={styles.loadingText}>Loading...</Text>
     //         </>
     //     )
-    //     setTimeout( () => {
-    //         let myArray = [
-    //             {
-    //                 "ascent": 814,
-    //                 "conditionDate": "2020-06-17 14:14:03",
-    //                 "conditionDetails": "Dry",
-    //                 "conditionStatus": "All Clear",
-    //                 "descent": -814,
-    //                 "difficulty": "blueBlack",
-    //                 "high": 2792,
-    //                 "id": 7022385,
-    //                 "imgMedium": "https://cdn2.apstatic.com/photos/hike/7021172_medium_1554839235.jpg",
-    //                 "imgSmall": "https://cdn2.apstatic.com/photos/hike/7021172_small_1554839235.jpg",
-    //                 "imgSmallMed": "https://cdn2.apstatic.com/photos/hike/7021172_smallMed_1554839235.jpg",
-    //                 "imgSqSmall": "https://cdn2.apstatic.com/photos/hike/7021172_sqsmall_1554839235.jpg",
-    //                 "latitude": 34.2371,
-    //                 "length": 9.8,
-    //                 "location": "La Verne, California",
-    //                 "longitude": -117.7649,
-    //                 "low": 2016,
-    //                 "name": "Bridge to Nowhere - East Fork Trail #8W13",
-    //                 "starVotes": 72,
-    //                 "stars": 4.5,
-    //                 "summary": "A great out-and-back to a large solitary bridge.",
-    //                 "type": "Recommended Route",
-    //                 "url": "https://www.hikingproject.com/trail/7022385/bridge-to-nowhere-east-fork-trail-8w13",
-    //               },
-    //               {
-    //                 "ascent": 382,
-    //                 "conditionDate": "2020-07-03 13:11:00",
-    //                 "conditionDetails": "Dry",
-    //                 "conditionStatus": "All Clear",
-    //                 "descent": -382,
-    //                 "difficulty": "blue",
-    //                 "high": 1359,
-    //                 "id": 7021812,
-    //                 "imgMedium": "https://cdn2.apstatic.com/photos/hike/7023492_medium_1554845093.jpg",
-    //                 "imgSmall": "https://cdn2.apstatic.com/photos/hike/7023492_small_1554845093.jpg",
-    //                 "imgSmallMed": "https://cdn2.apstatic.com/photos/hike/7023492_smallMed_1554845093.jpg",
-    //                 "imgSqSmall": "https://cdn2.apstatic.com/photos/hike/7023492_sqsmall_1554845093.jpg",
-    //                 "latitude": 34.1784,
-    //                 "length": 3.6,
-    //                 "location": "Altadena, California",
-    //                 "longitude": -118.0966,
-    //                 "low": 981,
-    //                 "name": "Eaton Falls",
-    //                 "starVotes": 90,
-    //                 "stars": 4.1,
-    //                 "summary": "A beautiful out-and-back to Eaton Falls with easy access from the Eaton Canyon Nature Center.",
-    //                 "type": "Recommended Route",
-    //                 "url": "https://www.hikingproject.com/trail/7021812/eaton-falls",
-    //               },
-    //               {
-    //                 "ascent": 112,
-    //                 "conditionDate": "1970-01-01 00:00:00",
-    //                 "conditionDetails": null,
-    //                 "conditionStatus": "Unknown",
-    //                 "descent": -111,
-    //                 "difficulty": "greenBlue",
-    //                 "high": 4262,
-    //                 "id": 7016879,
-    //                 "imgMedium": "https://cdn2.apstatic.com/photos/hike/7031364_medium_1554930885.jpg",
-    //                 "imgSmall": "https://cdn2.apstatic.com/photos/hike/7031364_small_1554930885.jpg",
-    //                 "imgSmallMed": "https://cdn2.apstatic.com/photos/hike/7031364_smallMed_1554930885.jpg",
-    //                 "imgSqSmall": "https://cdn2.apstatic.com/photos/hike/7031364_sqsmall_1554930885.jpg",
-    //                 "latitude": 34.0124,
-    //                 "length": 1,
-    //                 "location": "Twentynine Palms, California",
-    //                 "longitude": -116.168,
-    //                 "low": 4180,
-    //                 "name": "Hidden Valley Nature Trail",
-    //                 "starVotes": 55,
-    //                 "stars": 4.6,
-    //                 "summary": "An easy loop that provides brief introductions to the fauna and flora of Joshua Tree National Park.",
-    //                 "type": "Recommended Route",
-    //                 "url": "https://www.hikingproject.com/trail/7016879/hidden-valley-nature-trail",
-    //               },
-    //               {
-    //                 "ascent": 1469,
-    //                 "conditionDate": "2020-09-03 16:42:21",
-    //                 "conditionDetails": "Dry",
-    //                 "conditionStatus": "All Clear",
-    //                 "descent": -1471,
-    //                 "difficulty": "blueBlack",
-    //                 "high": 1532,
-    //                 "id": 7021815,
-    //                 "imgMedium": "https://cdn2.apstatic.com/photos/hike/7023507_medium_1554845113.jpg",
-    //                 "imgSmall": "https://cdn2.apstatic.com/photos/hike/7023507_small_1554845113.jpg",
-    //                 "imgSmallMed": "https://cdn2.apstatic.com/photos/hike/7023507_smallMed_1554845113.jpg",
-    //                 "imgSqSmall": "https://cdn2.apstatic.com/photos/hike/7023507_sqsmall_1554845113.jpg",
-    //                 "latitude": 34.0473,
-    //                 "length": 7.5,
-    //                 "location": "Las Flores, California",
-    //                 "longitude": -118.5601,
-    //                 "low": 270,
-    //                 "name": "Parker Mesa Overlook",
-    //                 "starVotes": 50,
-    //                 "stars": 4.5,
-    //                 "summary": "A one-day adventure into the southern hills of Topanga State Park to arguably the best view around.",
-    //                 "type": "Recommended Route",
-    //                 "url": "https://www.hikingproject.com/trail/7021815/parker-mesa-overlook",
-    //               },
-    //               {
-    //                 "ascent": 390,
-    //                 "conditionDate": "2020-06-14 12:19:25",
-    //                 "conditionDetails": "Dry",
-    //                 "conditionStatus": "All Clear",
-    //                 "descent": -390,
-    //                 "difficulty": "blueBlack",
-    //                 "high": 4711,
-    //                 "id": 7023357,
-    //                 "imgMedium": "https://cdn2.apstatic.com/photos/hike/7029988_medium_1554925694.jpg",
-    //                 "imgSmall": "https://cdn2.apstatic.com/photos/hike/7029988_small_1554925694.jpg",
-    //                 "imgSmallMed": "https://cdn2.apstatic.com/photos/hike/7029988_smallMed_1554925694.jpg",
-    //                 "imgSqSmall": "https://cdn2.apstatic.com/photos/hike/7029988_sqsmall_1554925694.jpg",
-    //                 "latitude": 36.1624,
-    //                 "length": 2.3,
-    //                 "location": "Summerlin South, Nevada",
-    //                 "longitude": -115.4504,
-    //                 "low": 4321,
-    //                 "name": "Calico Tanks Trail",
-    //                 "starVotes": 46,
-    //                 "stars": 4.7,
-    //                 "summary": "A popular out-and-back trail through sandstone formations to an overlook of the city and the Las Vegas strip.",
-    //                 "type": "Recommended Route",
-    //                 "url": "https://www.hikingproject.com/trail/7023357/calico-tanks-trail",
-    //               },
-    //               {
-    //                 "ascent": 1029,
-    //                 "conditionDate": "1970-01-01 00:00:00",
-    //                 "conditionDetails": null,
-    //                 "conditionStatus": "Unknown",
-    //                 "descent": -1028,
-    //                 "difficulty": "blueBlack",
-    //                 "high": 5452,
-    //                 "id": 7016889,
-    //                 "imgMedium": "https://cdn2.apstatic.com/photos/hike/7028016_medium_1554917409.jpg",
-    //                 "imgSmall": "https://cdn2.apstatic.com/photos/hike/7028016_small_1554917409.jpg",
-    //                 "imgSmallMed": "https://cdn2.apstatic.com/photos/hike/7028016_smallMed_1554917409.jpg",
-    //                 "imgSqSmall": "https://cdn2.apstatic.com/photos/hike/7028016_sqsmall_1554917409.jpg",
-    //                 "latitude": 34.0025,
-    //                 "length": 2.9,
-    //                 "location": "Twentynine Palms, California",
-    //                 "longitude": -116.1359,
-    //                 "low": 4423,
-    //                 "name": "Ryan Mountain Trail",
-    //                 "starVotes": 57,
-    //                 "stars": 4.2,
-    //                 "summary": "A trail up Ryan Mountain where sweeping view of Joshua Tree NP await.",
-    //                 "type": "Recommended Route",
-    //                 "url": "https://www.hikingproject.com/trail/7016889/ryan-mountain-trail",
-    //               },
-    //               {
-    //                 "ascent": 1144,
-    //                 "conditionDate": "2020-08-02 21:54:55",
-    //                 "conditionDetails": "Dry",
-    //                 "conditionStatus": "All Clear",
-    //                 "descent": -1144,
-    //                 "difficulty": "blueBlack",
-    //                 "high": 2996,
-    //                 "id": 7003186,
-    //                 "imgMedium": "https://cdn2.apstatic.com/photos/hike/7002245_medium_1554225583.jpg",
-    //                 "imgSmall": "https://cdn2.apstatic.com/photos/hike/7002245_small_1554225583.jpg",
-    //                 "imgSmallMed": "https://cdn2.apstatic.com/photos/hike/7002245_smallMed_1554225583.jpg",
-    //                 "imgSqSmall": "https://cdn2.apstatic.com/photos/hike/7002245_sqsmall_1554225583.jpg",
-    //                 "latitude": 34.1117,
-    //                 "length": 6.1,
-    //                 "location": "Thousand Oaks, California",
-    //                 "longitude": -118.9268,
-    //                 "low": 2115,
-    //                 "name": "Sandstone Peak Loop",
-    //                 "starVotes": 44,
-    //                 "stars": 4.5,
-    //                 "summary": "Hike this six-mile loop to summit Sandstone Peak.",
-    //                 "type": "Recommended Route",
-    //                 "url": "https://www.hikingproject.com/trail/7003186/sandstone-peak-loop",
-    //               },
-    //               {
-    //                 "ascent": 10444,
-    //                 "conditionDate": "1970-01-01 00:00:00",
-    //                 "conditionDetails": null,
-    //                 "conditionStatus": "Unknown",
-    //                 "descent": -172,
-    //                 "difficulty": "dblack",
-    //                 "high": 10751,
-    //                 "id": 7012359,
-    //                 "imgMedium": "https://cdn2.apstatic.com/photos/hike/7008862_medium_1554395303.jpg",
-    //                 "imgSmall": "https://cdn2.apstatic.com/photos/hike/7008862_small_1554395303.jpg",
-    //                 "imgSmallMed": "https://cdn2.apstatic.com/photos/hike/7008862_smallMed_1554395303.jpg",
-    //                 "imgSqSmall": "https://cdn2.apstatic.com/photos/hike/7008862_sqsmall_1554395303.jpg",
-    //                 "latitude": 33.8252,
-    //                 "length": 14.4,
-    //                 "location": "Palm Springs, California",
-    //                 "longitude": -116.5505,
-    //                 "low": 479,
-    //                 "name": "Cactus to Clouds: Palm Springs - Mt. San Jacinto",
-    //                 "starVotes": 36,
-    //                 "stars": 4.7,
-    //                 "summary": "From desert floor to mountain peak in the greatest elevation gain of any trail in the USA.",
-    //                 "type": "Recommended Route",
-    //                 "url": "https://www.hikingproject.com/trail/7012359/cactus-to-clouds-palm-springs-mt-san-jacinto",
-    //               },
-    //               {
-    //                 "ascent": 4739,
-    //                 "conditionDate": "1970-01-01 00:00:00",
-    //                 "conditionDetails": null,
-    //                 "conditionStatus": "Unknown",
-    //                 "descent": -4739,
-    //                 "difficulty": "black",
-    //                 "high": 5668,
-    //                 "id": 7009633,
-    //                 "imgMedium": "https://cdn2.apstatic.com/photos/hike/7007359_medium_1554322682.jpg",
-    //                 "imgSmall": "https://cdn2.apstatic.com/photos/hike/7007359_small_1554322682.jpg",
-    //                 "imgSmallMed": "https://cdn2.apstatic.com/photos/hike/7007359_smallMed_1554322682.jpg",
-    //                 "imgSqSmall": "https://cdn2.apstatic.com/photos/hike/7007359_sqsmall_1554322682.jpg",
-    //                 "latitude": 34.1709,
-    //                 "length": 13.6,
-    //                 "location": "Sierra Madre, California",
-    //                 "longitude": -118.0488,
-    //                 "low": 1044,
-    //                 "name": "Mount Wilson",
-    //                 "starVotes": 39,
-    //                 "stars": 4.5,
-    //                 "summary": "Looking for a hill to conquer in the Los Angeles area? Look no further!",
-    //                 "type": "Recommended Route",
-    //                 "url": "https://www.hikingproject.com/trail/7009633/mount-wilson",
-    //               },
-    //         ]
-    //         setData(myArray)
-    //         setLoadingScreen(null)
-    //     }, 100)
+    //      // function for get request
+    //     async function postData(url = '', data={}) {
+    //         let myBody = JSON.stringify(data)
+    //         const response = await fetch(url, {
+    //             method: 'POST', 
+    //             mode: 'cors',
+    //             cache: 'no-cache',
+    //             credentials: 'same-origin',
+    //             headers: {
+    //                 'Content-Type': 'application/json'
+    //             },
+    //             body: myBody
+    //         });
+    //         return response ? response.json() : console.log('no reponse')
+    //     }; 
+    //     if (props.match.params.value !== ':') {
+    //         // function for searching
+    //         const handlePress = () => {
+    //             try {
+    //             // in dev have to use manual localhost
+    //             postData('http://192.168.0.27:8080/trails', {
+    //                 City: props.match.params.value.slice(1)
+    //             }).then( response => {
+    //                 console.log(response.trails)
+    //                 setData(response.trails)
+    //                     setLoadingScreen(null)
+    //             })
+    //             } catch(error) {
+    //                 console.log(error)
+    //             }
+    //         }
+    //         handlePress()
+    //     }
     // }, [])
+
+    // map some sample data
+    useEffect( () => {
+        setLoadingScreen(
+            <>
+                <Image source={loadingTree} style={styles.loadingGif}></Image>
+                <Text style={styles.loadingText}>Loading...</Text>
+            </>
+        )
+        setTimeout( () => {
+            let myArray = [
+                {
+                    "ascent": 814,
+                    "conditionDate": "2020-06-17 14:14:03",
+                    "conditionDetails": "Dry",
+                    "conditionStatus": "All Clear",
+                    "descent": -814,
+                    "difficulty": "blueBlack",
+                    "high": 2792,
+                    "id": 7022385,
+                    "imgMedium": "https://cdn2.apstatic.com/photos/hike/7021172_medium_1554839235.jpg",
+                    "imgSmall": "https://cdn2.apstatic.com/photos/hike/7021172_small_1554839235.jpg",
+                    "imgSmallMed": "https://cdn2.apstatic.com/photos/hike/7021172_smallMed_1554839235.jpg",
+                    "imgSqSmall": "https://cdn2.apstatic.com/photos/hike/7021172_sqsmall_1554839235.jpg",
+                    "latitude": 34.2371,
+                    "length": 9.8,
+                    "location": "La Verne, California",
+                    "longitude": -117.7649,
+                    "low": 2016,
+                    "name": "Bridge to Nowhere - East Fork Trail #8W13",
+                    "starVotes": 72,
+                    "stars": 4.5,
+                    "summary": "A great out-and-back to a large solitary bridge.",
+                    "type": "Recommended Route",
+                    "url": "https://www.hikingproject.com/trail/7022385/bridge-to-nowhere-east-fork-trail-8w13",
+                  },
+                  {
+                    "ascent": 382,
+                    "conditionDate": "2020-07-03 13:11:00",
+                    "conditionDetails": "Dry",
+                    "conditionStatus": "All Clear",
+                    "descent": -382,
+                    "difficulty": "blue",
+                    "high": 1359,
+                    "id": 7021812,
+                    "imgMedium": "https://cdn2.apstatic.com/photos/hike/7023492_medium_1554845093.jpg",
+                    "imgSmall": "https://cdn2.apstatic.com/photos/hike/7023492_small_1554845093.jpg",
+                    "imgSmallMed": "https://cdn2.apstatic.com/photos/hike/7023492_smallMed_1554845093.jpg",
+                    "imgSqSmall": "https://cdn2.apstatic.com/photos/hike/7023492_sqsmall_1554845093.jpg",
+                    "latitude": 34.1784,
+                    "length": 3.6,
+                    "location": "Altadena, California",
+                    "longitude": -118.0966,
+                    "low": 981,
+                    "name": "Eaton Falls",
+                    "starVotes": 90,
+                    "stars": 4.1,
+                    "summary": "A beautiful out-and-back to Eaton Falls with easy access from the Eaton Canyon Nature Center.",
+                    "type": "Recommended Route",
+                    "url": "https://www.hikingproject.com/trail/7021812/eaton-falls",
+                  },
+                  {
+                    "ascent": 112,
+                    "conditionDate": "1970-01-01 00:00:00",
+                    "conditionDetails": null,
+                    "conditionStatus": "Unknown",
+                    "descent": -111,
+                    "difficulty": "greenBlue",
+                    "high": 4262,
+                    "id": 7016879,
+                    "imgMedium": "https://cdn2.apstatic.com/photos/hike/7031364_medium_1554930885.jpg",
+                    "imgSmall": "https://cdn2.apstatic.com/photos/hike/7031364_small_1554930885.jpg",
+                    "imgSmallMed": "https://cdn2.apstatic.com/photos/hike/7031364_smallMed_1554930885.jpg",
+                    "imgSqSmall": "https://cdn2.apstatic.com/photos/hike/7031364_sqsmall_1554930885.jpg",
+                    "latitude": 34.0124,
+                    "length": 1,
+                    "location": "Twentynine Palms, California",
+                    "longitude": -116.168,
+                    "low": 4180,
+                    "name": "Hidden Valley Nature Trail",
+                    "starVotes": 55,
+                    "stars": 4.6,
+                    "summary": "An easy loop that provides brief introductions to the fauna and flora of Joshua Tree National Park.",
+                    "type": "Recommended Route",
+                    "url": "https://www.hikingproject.com/trail/7016879/hidden-valley-nature-trail",
+                  },
+                  {
+                    "ascent": 1469,
+                    "conditionDate": "2020-09-03 16:42:21",
+                    "conditionDetails": "Dry",
+                    "conditionStatus": "All Clear",
+                    "descent": -1471,
+                    "difficulty": "blueBlack",
+                    "high": 1532,
+                    "id": 7021815,
+                    "imgMedium": "https://cdn2.apstatic.com/photos/hike/7023507_medium_1554845113.jpg",
+                    "imgSmall": "https://cdn2.apstatic.com/photos/hike/7023507_small_1554845113.jpg",
+                    "imgSmallMed": "https://cdn2.apstatic.com/photos/hike/7023507_smallMed_1554845113.jpg",
+                    "imgSqSmall": "https://cdn2.apstatic.com/photos/hike/7023507_sqsmall_1554845113.jpg",
+                    "latitude": 34.0473,
+                    "length": 7.5,
+                    "location": "Las Flores, California",
+                    "longitude": -118.5601,
+                    "low": 270,
+                    "name": "Parker Mesa Overlook",
+                    "starVotes": 50,
+                    "stars": 4.5,
+                    "summary": "A one-day adventure into the southern hills of Topanga State Park to arguably the best view around.",
+                    "type": "Recommended Route",
+                    "url": "https://www.hikingproject.com/trail/7021815/parker-mesa-overlook",
+                  },
+                  {
+                    "ascent": 390,
+                    "conditionDate": "2020-06-14 12:19:25",
+                    "conditionDetails": "Dry",
+                    "conditionStatus": "All Clear",
+                    "descent": -390,
+                    "difficulty": "blueBlack",
+                    "high": 4711,
+                    "id": 7023357,
+                    "imgMedium": "https://cdn2.apstatic.com/photos/hike/7029988_medium_1554925694.jpg",
+                    "imgSmall": "https://cdn2.apstatic.com/photos/hike/7029988_small_1554925694.jpg",
+                    "imgSmallMed": "https://cdn2.apstatic.com/photos/hike/7029988_smallMed_1554925694.jpg",
+                    "imgSqSmall": "https://cdn2.apstatic.com/photos/hike/7029988_sqsmall_1554925694.jpg",
+                    "latitude": 36.1624,
+                    "length": 2.3,
+                    "location": "Summerlin South, Nevada",
+                    "longitude": -115.4504,
+                    "low": 4321,
+                    "name": "Calico Tanks Trail",
+                    "starVotes": 46,
+                    "stars": 4.7,
+                    "summary": "A popular out-and-back trail through sandstone formations to an overlook of the city and the Las Vegas strip.",
+                    "type": "Recommended Route",
+                    "url": "https://www.hikingproject.com/trail/7023357/calico-tanks-trail",
+                  },
+                  {
+                    "ascent": 1029,
+                    "conditionDate": "1970-01-01 00:00:00",
+                    "conditionDetails": null,
+                    "conditionStatus": "Unknown",
+                    "descent": -1028,
+                    "difficulty": "blueBlack",
+                    "high": 5452,
+                    "id": 7016889,
+                    "imgMedium": "https://cdn2.apstatic.com/photos/hike/7028016_medium_1554917409.jpg",
+                    "imgSmall": "https://cdn2.apstatic.com/photos/hike/7028016_small_1554917409.jpg",
+                    "imgSmallMed": "https://cdn2.apstatic.com/photos/hike/7028016_smallMed_1554917409.jpg",
+                    "imgSqSmall": "https://cdn2.apstatic.com/photos/hike/7028016_sqsmall_1554917409.jpg",
+                    "latitude": 34.0025,
+                    "length": 2.9,
+                    "location": "Twentynine Palms, California",
+                    "longitude": -116.1359,
+                    "low": 4423,
+                    "name": "Ryan Mountain Trail",
+                    "starVotes": 57,
+                    "stars": 4.2,
+                    "summary": "A trail up Ryan Mountain where sweeping view of Joshua Tree NP await.",
+                    "type": "Recommended Route",
+                    "url": "https://www.hikingproject.com/trail/7016889/ryan-mountain-trail",
+                  },
+                  {
+                    "ascent": 1144,
+                    "conditionDate": "2020-08-02 21:54:55",
+                    "conditionDetails": "Dry",
+                    "conditionStatus": "All Clear",
+                    "descent": -1144,
+                    "difficulty": "blueBlack",
+                    "high": 2996,
+                    "id": 7003186,
+                    "imgMedium": "https://cdn2.apstatic.com/photos/hike/7002245_medium_1554225583.jpg",
+                    "imgSmall": "https://cdn2.apstatic.com/photos/hike/7002245_small_1554225583.jpg",
+                    "imgSmallMed": "https://cdn2.apstatic.com/photos/hike/7002245_smallMed_1554225583.jpg",
+                    "imgSqSmall": "https://cdn2.apstatic.com/photos/hike/7002245_sqsmall_1554225583.jpg",
+                    "latitude": 34.1117,
+                    "length": 6.1,
+                    "location": "Thousand Oaks, California",
+                    "longitude": -118.9268,
+                    "low": 2115,
+                    "name": "Sandstone Peak Loop",
+                    "starVotes": 44,
+                    "stars": 4.5,
+                    "summary": "Hike this six-mile loop to summit Sandstone Peak.",
+                    "type": "Recommended Route",
+                    "url": "https://www.hikingproject.com/trail/7003186/sandstone-peak-loop",
+                  },
+                  {
+                    "ascent": 10444,
+                    "conditionDate": "1970-01-01 00:00:00",
+                    "conditionDetails": null,
+                    "conditionStatus": "Unknown",
+                    "descent": -172,
+                    "difficulty": "dblack",
+                    "high": 10751,
+                    "id": 7012359,
+                    "imgMedium": "https://cdn2.apstatic.com/photos/hike/7008862_medium_1554395303.jpg",
+                    "imgSmall": "https://cdn2.apstatic.com/photos/hike/7008862_small_1554395303.jpg",
+                    "imgSmallMed": "https://cdn2.apstatic.com/photos/hike/7008862_smallMed_1554395303.jpg",
+                    "imgSqSmall": "https://cdn2.apstatic.com/photos/hike/7008862_sqsmall_1554395303.jpg",
+                    "latitude": 33.8252,
+                    "length": 14.4,
+                    "location": "Palm Springs, California",
+                    "longitude": -116.5505,
+                    "low": 479,
+                    "name": "Cactus to Clouds: Palm Springs - Mt. San Jacinto",
+                    "starVotes": 36,
+                    "stars": 4.7,
+                    "summary": "From desert floor to mountain peak in the greatest elevation gain of any trail in the USA.",
+                    "type": "Recommended Route",
+                    "url": "https://www.hikingproject.com/trail/7012359/cactus-to-clouds-palm-springs-mt-san-jacinto",
+                  },
+                  {
+                    "ascent": 4739,
+                    "conditionDate": "1970-01-01 00:00:00",
+                    "conditionDetails": null,
+                    "conditionStatus": "Unknown",
+                    "descent": -4739,
+                    "difficulty": "black",
+                    "high": 5668,
+                    "id": 7009633,
+                    "imgMedium": "https://cdn2.apstatic.com/photos/hike/7007359_medium_1554322682.jpg",
+                    "imgSmall": "https://cdn2.apstatic.com/photos/hike/7007359_small_1554322682.jpg",
+                    "imgSmallMed": "https://cdn2.apstatic.com/photos/hike/7007359_smallMed_1554322682.jpg",
+                    "imgSqSmall": "https://cdn2.apstatic.com/photos/hike/7007359_sqsmall_1554322682.jpg",
+                    "latitude": 34.1709,
+                    "length": 13.6,
+                    "location": "Sierra Madre, California",
+                    "longitude": -118.0488,
+                    "low": 1044,
+                    "name": "Mount Wilson",
+                    "starVotes": 39,
+                    "stars": 4.5,
+                    "summary": "Looking for a hill to conquer in the Los Angeles area? Look no further!",
+                    "type": "Recommended Route",
+                    "url": "https://www.hikingproject.com/trail/7009633/mount-wilson",
+                  },
+            ]
+            setData(myArray)
+            setLoadingScreen(null)
+        }, 100)
+    }, [])
 
     // function for changing rendering of hamburger menu
     
@@ -330,15 +331,30 @@ const SearchPage = (props) => {
                     <View style={styles.hamburgerMenuLineCrossTwo}></View>
                 </TouchableOpacity>
             )
-            setNavBar(
-                <View style={styles.navBarContainer}>
-                    <Link to='/'>
-                        <Text style={styles.linkStyle}>
-                            Home
+            if (lastTrail !== '') {
+                setNavBar(
+                    <View style={styles.navBarContainer}>
+                        <Link to='/'>
+                            <Text style={styles.linkStyle}>
+                                Home
+                            </Text>
+                        </Link>
+                        <Text style={styles.linkStyle} onPress={(e, theUri) => handleWebView(e, lastTrail)}>
+                            Last Trail
                         </Text>
-                    </Link>
-                </View>
-            )
+                    </View>
+                )
+            } else {
+                setNavBar(
+                    <View style={styles.navBarContainer}>
+                        <Link to='/'>
+                            <Text style={styles.linkStyle}>
+                                Home
+                            </Text>
+                        </Link>
+                    </View>
+                )
+            }
         }
     }, [hamburgerGate, data])
 
@@ -350,22 +366,31 @@ const SearchPage = (props) => {
 
     // handle loading the url
     const handleWebView = (e, theUrl) => {
-        setWebViewGate('true')
-        setWebViewRender(
-            <>
-                <WebView
-                    source={{ uri: theUrl }}
-                    // style={styles.webViewStyle}
-                    renderLoading={() => <Loading />}
-                />
-                <TouchableOpacity 
-                    style={styles.webTouchableOpacityReturnView}
-                    onPress={handleReturn}    
-                >
-                    <Text style={styles.returnText}>Return</Text>
-                </TouchableOpacity>
-            </>
-        )
+        if (theUrl) {
+            setLastTrail(theUrl)
+            setWebViewGate('true')
+            setWebViewRender(
+                <>
+                    <WebView
+                        source={{ uri: theUrl }}
+                        renderLoading={() => <Loading />}
+                    />
+                    <TouchableOpacity 
+                        style={styles.webTouchableOpacityReturnView}
+                        onPress={handleReturn}    
+                    >
+                        <Text style={styles.returnText}>Return</Text>
+                    </TouchableOpacity>
+                </>
+            )
+        } else {
+            setWebViewGate('true')
+            setWebViewRender(
+                <View style={styles.webViewNoString}>
+                    <Text>No Trail Visited Yet</Text>
+                </View>
+            )
+        }
     }
 
     // when there is data, render the images and hikes
@@ -560,7 +585,8 @@ const styles = StyleSheet.create({
     linkStyle: {
         color: 'black',
         fontSize: 40,
-        marginTop: 15
+        marginTop: 15,
+        fontFamily: 'Noteworthy'
     },
     loadingGif: {
         width: 200,
@@ -585,14 +611,14 @@ const styles = StyleSheet.create({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        top: 20,
-        left: 20,
-        height: 100,
+        top: 70,
+        right: 20,
+        height: 50,
         backgroundColor: 'white',
         width: 100,
         zIndex: 1,
         borderRadius: 20,
-        opacity: .8
+        opacity: 1
     },
     returnText: {
         fontSize: 25
